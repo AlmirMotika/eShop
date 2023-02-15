@@ -2,8 +2,7 @@ import React from "react";
 import { BrowserRouter,Route,Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
-import Contact from "./pages/contact/Contact";
-import Home from "./pages/home/Home";
+import {Home,Contact} from "./pages";
 function App() {
   return (
     <>
