@@ -1,8 +1,11 @@
 import {useState,React} from 'react'
-import { Link } from 'react-router-dom';
+import { Link,NavLink } from 'react-router-dom';
 import styles from "./Header.module.scss";
 import {FaShoppingCart, FaTimes} from "react-icons/fa"
 import {HiOutlineMenuAlt3} from "react-icons/hi";
+
+const activeLink=({isActive})=>
+(isActive?`${styles.active}`:"")
 
 const logo=(
 <div className={styles.logo}>
@@ -16,15 +19,17 @@ const logo=(
 )
 const cart=(
   <span className={styles.cart}>
-              <Link to="/cart">
+              <NavLink to="/cart" className={activeLink}>
                 Cart
                 <FaShoppingCart size={20}/>
                 <p>0</p>
 
-              </Link>
+              </NavLink>
   </span>
 
 )
+
+
 const Header = () => {
   const[showMenu,setShowMenu]=useState(false);
   
@@ -52,21 +57,21 @@ const Header = () => {
               <FaTimes size={22} color="#fff" onClick={hideMenu}/>
             </li>
             <li>
-            <Link to="/">
+            <NavLink to="/" className={activeLink}>
                 Home
-              </Link>              
+              </NavLink>              
             </li>
             <li>
-              <Link to="/contact">
+              <NavLink to="/contact" className={activeLink}>
                 Contact Us
-              </Link>
+              </NavLink>
             </li>           
           </ul>
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
-              <Link to="/Login">Login</Link>
-              <Link to="/Register">Register</Link>
-              <Link to="/order-history">My orders</Link> 
+              <NavLink to="/Login" className={activeLink}>Login</NavLink>
+              <NavLink to="/Register" className={activeLink}>Register</NavLink>
+              <NavLink to="/order-history" className={activeLink}>My orders</NavLink> 
             </span>
             {cart}
           </div>
