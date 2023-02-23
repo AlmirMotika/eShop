@@ -1,10 +1,10 @@
-import {useState,React} from 'react'
+import {useState,React, useEffect} from 'react'
 import { Link,NavLink,useNavigate } from 'react-router-dom';
 import styles from "./Header.module.scss";
-import {FaShoppingCart, FaTimes} from "react-icons/fa"
+import {FaShoppingCart, FaTimes, FaUserCircle} from "react-icons/fa"
 import {HiOutlineMenuAlt3} from "react-icons/hi";
 import { toast } from 'react-toastify';
-import { signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 const activeLink=({isActive})=>
 (isActive?`${styles.active}`:"")
@@ -35,7 +35,20 @@ const cart=(
 
 const Header = () => {
   const[showMenu,setShowMenu]=useState(false);
-const navigate=useNavigate();
+  const[displayName,setdisplayName]=useState("");
+  const navigate=useNavigate();
+
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        console.log(user.displayName);
+        setdisplayName(user.displayName);
+      } else {
+        setdisplayName("");
+      }
+    });
+  })
 
   
   const toggleMenu=()=>{
@@ -84,6 +97,10 @@ const navigate=useNavigate();
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
               <NavLink to="/Login" className={activeLink}>Login</NavLink>
+              <a href="#">
+                <FaUserCircle size={16}/>
+                Hi,{displayName}
+              </a>
               <NavLink to="/Register" className={activeLink}>Register</NavLink>
               <NavLink to="/order-history" className={activeLink}>My orders</NavLink> 
               <NavLink to="/" onClick={logoutUser}>Logout</NavLink> 
