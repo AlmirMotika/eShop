@@ -44,9 +44,10 @@ const Header = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         if(user.displayName==null){
-          const u1=user.email.slice(0,-12);
-          console.log(u1);
-          setdisplayName(u1);
+          const u1=user.email.substring(0,user.email.indexOf("@"));
+          const uName=u1.charAt(0).toUpperCase()+u1.slice(1);
+          console.log(uName);
+          setdisplayName(uName);
         }
         else{
         setdisplayName(user.displayName);
