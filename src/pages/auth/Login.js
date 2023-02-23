@@ -23,7 +23,7 @@ const Login = () => {
   .then((userCredential) => {
     const user = userCredential.user;
     setIsLoading(false);
-    toast.success("Login Successfull...")
+    toast.success("Login Successfull...");
     navigate("/");
   })
   .catch((error) => {
@@ -34,6 +34,7 @@ const Login = () => {
   }
   return (
     <>
+    <ToastContainer/>
     {isLoading && <Loader/>}
     <section className={`container ${styles.auth}`}>
       <div className={styles.img}>
