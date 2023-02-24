@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import { useDispatch } from 'react-redux';
-import { SET_ACTIVE_USER } from '../../redux/slice/authSlice';
+import { SET_ACTIVE_USER,REMOVE_ACTIVE_USER } from '../../redux/slice/authSlice';
 
 const activeLink=({isActive})=>
 (isActive?`${styles.active}`:"")
@@ -45,9 +45,8 @@ const Header = () => {
       if (user) {
         if(user.displayName==null){
           const u1=user.email.substring(0,user.email.indexOf("@"));
-          const uName=u1.charAt(0).toUpperCase()+u1.slice(1);
-          console.log(uName);
-          setdisplayName(uName);
+          const uName=u1.charAt(0).toUpperCase()+u1.slice(1);        
+          setdisplayName(uName);      
         }
         else{
         setdisplayName(user.displayName);
@@ -59,12 +58,13 @@ const Header = () => {
           email:user.email,
           userName:user.displayName?user.displayName:displayName,
           userID:user.uid,
-        }))
+        }));
       } else {
         setdisplayName("");
+        dispatch(REMOVE_ACTIVE_USER());
       }
     });
-  })
+  },[dispatch,displayName])
 
   
   const toggleMenu=()=>{
@@ -113,7 +113,7 @@ const Header = () => {
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
               <NavLink to="/Login" className={activeLink}>Login</NavLink>
-              <a href="#">
+              <a href="#Home">
                 <FaUserCircle size={16}/>
                 Hi,{displayName}
               </a>
