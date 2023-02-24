@@ -8,6 +8,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import { useDispatch } from 'react-redux';
 import { SET_ACTIVE_USER,REMOVE_ACTIVE_USER } from '../../redux/slice/authSlice';
+import ShowOnLogin, { ShowOnLogout } from '../hiddenLink/hiddenLink';
 
 const activeLink=({isActive})=>
 (isActive?`${styles.active}`:"")
@@ -112,14 +113,17 @@ const Header = () => {
           </ul>
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
+              <ShowOnLogout>            
               <NavLink to="/Login" className={activeLink}>Login</NavLink>
-              <a href="#Home">
+              </ShowOnLogout>                           
+              <ShowOnLogin>  
+              <a href="#Home" style={{color:"#ff7722"}}>
                 <FaUserCircle size={16}/>
                 Hi,{displayName}
-              </a>
-              <NavLink to="/Register" className={activeLink}>Register</NavLink>
+              </a>       
               <NavLink to="/order-history" className={activeLink}>My orders</NavLink> 
-              <NavLink to="/" onClick={logoutUser}>Logout</NavLink> 
+              <NavLink to="/" onClick={logoutUser}>Logout</NavLink>
+              </ShowOnLogin> 
             </span>
             {cart}
           </div>
