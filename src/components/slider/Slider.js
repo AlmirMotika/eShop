@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {AiOutlineArrowLeft,AiOutlineArrowRight} from "react-icons/ai"
 import { sliderData } from './slider-data'
 import "./Slider.scss";
 const Slider = () => {
     const [currentSlide,setCurrentSlide]=useState(0);
     const slideLength=sliderData.length;
+
+    const autoScroll=true;
+    let slideInterval;
+    let intervalTime=5000;
 
     console.log(slideLength);
     const nextSlide=()=>{
@@ -14,6 +18,20 @@ const Slider = () => {
     const prevSlide=()=>{
         setCurrentSlide(currentSlide===0?slideLength-1:currentSlide-1);
     }
+
+    useEffect(()=>{
+        setCurrentSlide(0);
+    },[]);
+
+    function auto(){
+        slideInterval=setInterval(nextSlide,intervalTime);
+    }
+    useEffect(()=>{
+        if(autoScroll){
+            auto();
+        }
+        return ()=>clearInterval(slideInterval);
+    },[currentSlide]);
 
   return (
     <div className="slider">
