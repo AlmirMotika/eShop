@@ -6,7 +6,7 @@ import {Home,Contact, Login,Register,Reset} from "./pages";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Admin from "./pages/admin/Admin";
-import AdminOnlyRoutes from "./components/adminOnlyRoutes/AdminOnlyRoutes";
+import AdminOnlyRoutes, { AdminOnlyLink } from "./components/adminOnlyRoutes/AdminOnlyRoutes";
 function App() {
   return (
     <> 

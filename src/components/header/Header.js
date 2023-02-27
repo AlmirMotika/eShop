@@ -9,7 +9,7 @@ import { auth } from '../../firebase/config';
 import { useDispatch } from 'react-redux';
 import { SET_ACTIVE_USER,REMOVE_ACTIVE_USER } from '../../redux/slice/authSlice';
 import ShowOnLogin, { ShowOnLogout } from '../hiddenLink/hiddenLink';
-import AdminOnlyRoutes from '../adminOnlyRoutes/AdminOnlyRoutes';
+import AdminOnlyRoutes, { AdminOnlyLink } from '../adminOnlyRoutes/AdminOnlyRoutes';
 
 const activeLink=({isActive})=>
 (isActive?`${styles.active}`:"")
@@ -102,11 +102,11 @@ const Header = () => {
               <FaTimes size={22} color="#fff" onClick={hideMenu}/>
             </li>
             <li>
-              <AdminOnlyRoutes>
-                <NavLink to="/Admin">
+              <AdminOnlyLink>
+                <Link to="/Admin/home">
                 <button className="--btn --btn-primary">Admin</button>
-                </NavLink>      
-              </AdminOnlyRoutes>
+                </Link>      
+              </AdminOnlyLink>
             </li>
             <li>
             <NavLink to="/" className={activeLink}>
