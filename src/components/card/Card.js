@@ -1,8 +1,8 @@
 import React from 'react'
 import styles from "./card.module.scss";
-const Card = ({children,cardclass}) => {
+const Card = ({children,cardClass}) => {
   return (
-    <div className={`${styles.card} ${styles.cardclass}`}>
+    <div className={`${styles.card} ${cardClass}`}>
         {children}
       
     </div>
