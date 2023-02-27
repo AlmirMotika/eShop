@@ -103,9 +103,10 @@ const Header = () => {
             </li>
             <li>
               <AdminOnlyRoutes>
-                {" "}
-            <button className="--btn --btn-primary">Admin</button>
-            </AdminOnlyRoutes>
+                <NavLink to="/Admin">
+                <button className="--btn --btn-primary">Admin</button>
+                </NavLink>      
+              </AdminOnlyRoutes>
             </li>
             <li>
             <NavLink to="/" className={activeLink}>

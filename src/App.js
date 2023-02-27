@@ -5,6 +5,8 @@ import Footer from "./components/footer/Footer";
 import {Home,Contact, Login,Register,Reset} from "./pages";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Admin from "./pages/admin/Admin";
+import AdminOnlyRoutes from "./components/adminOnlyRoutes/AdminOnlyRoutes";
 function App() {
   return (
     <> 
@@ -17,6 +19,7 @@ function App() {
       <Route path="/Login" element={<Login/>}/>
       <Route path="/Register" element={<Register/>}/>
       <Route path="/Reset" element={<Reset/>}/>
+      <Route path="/Admin/*" element={<AdminOnlyRoutes><Admin/></AdminOnlyRoutes>}/>
 
     </Routes>
 
