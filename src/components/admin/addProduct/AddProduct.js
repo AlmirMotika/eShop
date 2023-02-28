@@ -1,5 +1,7 @@
+import { ref, uploadBytesResumable } from 'firebase/storage';
 import React from 'react'
 import { useState } from 'react'
+import { storage } from '../../../firebase/config';
 import Card from '../../card/Card';
 import styles from "./AddProduct.module.scss";
 const categories=[
@@ -14,7 +16,7 @@ const AddProduct = () => {
   const [product,setProduct]=useState({
     name:"",
     imageURL:"",
-    price:null,
+    price:0,
     category:"",
     brand:"",
     desc:"",
@@ -23,7 +25,12 @@ const AddProduct = () => {
     const {name,value}=e.target
     setProduct({...product,[name]:value})
   };
-  const handleImageChange=(e)=>{};
+  const handleImageChange=(e)=>{
+    const file=e.target.files[0];
+    console.log(file);
+    const storageRef = ref(storage, `eShop/${Date.now()}${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+  };
 
   const addProduct=(e)=>{
     e.preventDefault();
