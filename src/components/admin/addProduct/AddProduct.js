@@ -1,9 +1,12 @@
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { storage } from '../../../firebase/config';
+import { db, storage } from '../../../firebase/config';
 import Card from '../../card/Card';
+import Loader from '../../loader/Loader';
 import styles from "./AddProduct.module.scss";
 const categories=[
   {id:1,name:"Laptop"},
@@ -14,15 +17,20 @@ const categories=[
 ]
 
 const AddProduct = () => {
-  const [product,setProduct]=useState({
+  const initialState={
     name:"",
     imageURL:"",
     price:0,
     category:"",
     brand:"",
     desc:"",
-  })
+  }
+  const [product,setProduct]=useState({
+   ...initialState
+  });
   const [uploadProgress,setUploadProgress]=useState(0);
+  const [isLoading,setIsLoading]=useState(false);
+  const navigate=useNavigate();
   const handleInputChange=(e)=>{
     const {name,value}=e.target
     setProduct({...product,[name]:value})
@@ -54,8 +62,31 @@ uploadTask.on('state_changed',
   const addProduct=(e)=>{
     e.preventDefault();
     console.log(product);
+    setIsLoading(true);
+    try{
+    const docRef = addDoc(collection(db, "products"), {
+      name: product.name,
+      imageURL:product.imageURL,
+    price:Number(product.price),
+    category:product.category,
+    brand:product.brand,
+    desc:product.desc,
+    createdAt:Timestamp.now().toDate()
+    });
+    setIsLoading(false);
+    setUploadProgress(0);
+    setProduct(initialState);
+    toast.success("Product uploaded succesfully.");
+    navigate("/admin/all-products");
+  }catch(error){
+    setIsLoading(false);
+    toast.error(error.message);
+  }
+    
   }
   return (
+    <>
+    {isLoading && <Loader/>}
     <div className={styles.product}>
       <h1>Add new Product</h1>
       <Card cardClass={styles.card}>
@@ -149,6 +180,7 @@ uploadTask.on('state_changed',
         </form>
       </Card>
     </div>
+    </>
   )
 }
 
