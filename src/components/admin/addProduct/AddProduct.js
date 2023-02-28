@@ -19,13 +19,21 @@ const AddProduct = () => {
     brand:"",
     desc:"",
   })
-  const handleInputChange=(e)=>{};
+  const handleInputChange=(e)=>{
+    const {name,value}=e.target
+    setProduct({...product,[name]:value})
+  };
   const handleImageChange=(e)=>{};
+
+  const addProduct=(e)=>{
+    e.preventDefault();
+    console.log(product);
+  }
   return (
     <div className={styles.product}>
       <h1>Add new Product</h1>
       <Card cardClass={styles.card}>
-        <form>
+        <form onSubmit={addProduct}>
         <label>Product name:</label>
         <input type="text" 
         placeholder="Product name"
@@ -50,7 +58,8 @@ const AddProduct = () => {
           onChange={(e)=>handleImageChange(e)}/>
           <input 
           type="text" 
-          required 
+          //required
+          placeholder="Image URL" 
           name="imageURL"
           value={product.imageURL} 
           disabled
@@ -68,7 +77,7 @@ const AddProduct = () => {
         onChange={(e)=>handleInputChange(e)}
         />
         <label>Product Category:</label>
-        <select required name="category" value={product.category} onChange={(e)=>{handleInputChange()}}>
+        <select required name="category" value={product.category} onChange={(e)=>{handleInputChange(e)}}>
           <option value="" disabled>
             -- choose product category --
           </option>
@@ -98,7 +107,7 @@ const AddProduct = () => {
         >
 
         </textarea>
-        <button className="--btn --btn-primary">
+        <button type="submit" className="--btn --btn-primary">
           Save Product
         </button>
         </form>
