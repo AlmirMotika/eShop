@@ -1,10 +1,12 @@
-import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { db } from '../../../firebase/config';
+import { db, storage } from '../../../firebase/config';
 import styles from "./ViewProducts.module.scss";
 import { FaTrashAlt,FaEdit } from 'react-icons/fa';
+import Loader from '../../loader/Loader';
+import { deleteObject, ref } from 'firebase/storage';
 const ViewProducts = () => {
   const[products,setProducts]=useState([]);
   const[isLoading,setIsLoading]=useState(false);
@@ -33,8 +35,24 @@ useEffect(()=>{
       toast.error(error.message);
     }
   }
+  const DeleteProduct=async(id,imageURL)=>{
+    setIsLoading(true);
+    try{ 
+      await deleteDoc(doc(db, "products",id));
+      const storageRef = ref(storage, imageURL);
+      await deleteObject(storageRef);
+      toast.success("Product deleted successfully.")
+      setIsLoading(false);
+    }
+    catch(error){
+      setIsLoading(false);
+      toast.error(error.message);
+      
+    }
+  }
   return (
   <>
+  {isLoading && <Loader/>}
     <div className={styles.table}>
       <h2>All products</h2>
       {products.length===0?(
@@ -51,10 +69,11 @@ useEffect(()=>{
             <th>Actions</th>
           </tr>
           </thead>
+          <tbody>
           {products.map((product,index)=>{
             const {id,name,price,imageURL,category}=product;
             return(
-              <tbody>
+              
               <tr key={id}>
                 <td>
                   {index+1}
@@ -71,21 +90,23 @@ useEffect(()=>{
                 <td>
                   {`$${price}`}
                 </td>
-                <td>
+                <td className={styles.icons}>
                   <Link to="/admin/add-product">
                     <FaEdit size={20} color="green"/>
                   </Link>
                   &nbsp;
-                  <FaTrashAlt size={18} color="red"/>
+                  <FaTrashAlt size={18} color="red" onClick={()=>DeleteProduct(id,imageURL)}/>
 
                 </td>
 
 
               </tr>
-              </tbody>
+              
             )
+            
           
           })}
+          </tbody>
         </table>
       )}
 
