@@ -8,10 +8,12 @@ import { FaTrashAlt,FaEdit } from 'react-icons/fa';
 import Loader from '../../loader/Loader';
 import { deleteObject, ref } from 'firebase/storage';
 import Notiflix from 'notiflix';
-
+import { useDispatch } from 'react-redux';
+import { STORE_PRODUCTS } from '../../../redux/slice/productSlice';
 const ViewProducts = () => {
   const[products,setProducts]=useState([]);
   const[isLoading,setIsLoading]=useState(false);
+  const dispatch=useDispatch();
 useEffect(()=>{
   getProducts();
 },[]);
@@ -27,9 +29,12 @@ useEffect(()=>{
        id:doc.id,
        ...doc.data()
     }))
-    console.log(allProducts);
+    //console.log(allProducts);
     setProducts(allProducts);
     setIsLoading(false);
+    dispatch(STORE_PRODUCTS({
+      products:allProducts,
+    }));
     });
     }
     catch(error){
