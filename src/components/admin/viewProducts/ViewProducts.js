@@ -7,6 +7,8 @@ import styles from "./ViewProducts.module.scss";
 import { FaTrashAlt,FaEdit } from 'react-icons/fa';
 import Loader from '../../loader/Loader';
 import { deleteObject, ref } from 'firebase/storage';
+import Notiflix from 'notiflix';
+
 const ViewProducts = () => {
   const[products,setProducts]=useState([]);
   const[isLoading,setIsLoading]=useState(false);
@@ -35,7 +37,28 @@ useEffect(()=>{
       toast.error(error.message);
     }
   }
-  const DeleteProduct=async(id,imageURL)=>{
+  const confirmDelete=(id,imageURL)=>{
+    Notiflix.Confirm.show(
+      'Delete Product!!!',
+      'You are about to delete this product',
+      'Delete',
+      'Cancel',
+      function okCb() {
+        deleteProduct(id,imageURL);
+      },
+      function cancelCb() {
+        console.log("Delete canceled")
+      },
+      {
+        width: '320px',
+        borderRadius: '8px',
+        titleColor:"orangered",
+        okButtonBackground:"orangered",
+        cssAnimationStyle:"zoom",
+      },
+    );
+  }
+  const deleteProduct=async(id,imageURL)=>{
     setIsLoading(true);
     try{ 
       await deleteDoc(doc(db, "products",id));
@@ -95,7 +118,7 @@ useEffect(()=>{
                     <FaEdit size={20} color="green"/>
                   </Link>
                   &nbsp;
-                  <FaTrashAlt size={18} color="red" onClick={()=>DeleteProduct(id,imageURL)}/>
+                  <FaTrashAlt size={18} color="red" onClick={()=>confirmDelete(id,imageURL)}/>
 
                 </td>
 
