@@ -2,12 +2,14 @@ import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import React from 'react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { db, storage } from '../../../firebase/config';
 import Card from '../../card/Card';
 import Loader from '../../loader/Loader';
 import styles from "./AddProduct.module.scss";
+import {selectProducts} from "../../../redux/slice/productSlice";
+import { useSelector } from 'react-redux';
 const categories=[
   {id:1,name:"Laptop"},
   {id:2,name:"Electronics"},
@@ -17,6 +19,8 @@ const categories=[
 ]
 
 const AddProduct = () => {
+  const {id}=useParams();
+  console.log(id);
   const initialState={
     name:"",
     imageURL:"",
@@ -25,16 +29,31 @@ const AddProduct = () => {
     brand:"",
     desc:"",
   }
-  const [product,setProduct]=useState({
-   ...initialState
-  });
+  
   const [uploadProgress,setUploadProgress]=useState(0);
   const [isLoading,setIsLoading]=useState(false);
   const navigate=useNavigate();
+  const products=useSelector(selectProducts);
+  const productEdit=products.find((item)=>item.id===id);
+  console.log(productEdit);
+  const [product,setProduct]=useState(()=>{
+    const newState=detectForm(id,
+      {...initialState},
+      productEdit)
+      return newState;
+  });
   const handleInputChange=(e)=>{
     const {name,value}=e.target
     setProduct({...product,[name]:value})
   };
+
+  function detectForm(id,f1,f2){
+    if(id==="ADD"){
+      return f1;
+    }
+    return f2;
+
+  }
   const handleImageChange=(e)=>{
     const file=e.target.files[0];
     console.log(file);
@@ -84,13 +103,20 @@ uploadTask.on('state_changed',
   }
     
   }
+  const editProduct=(e)=>{
+    e.preventDefault();
+    console.log(product);
+    setIsLoading(true);
+
+  }
+  
   return (
     <>
     {isLoading && <Loader/>}
     <div className={styles.product}>
-      <h1>Add new Product</h1>
+      <h2>{detectForm(id,"Add New Product","Edit Product")}</h2>
       <Card cardClass={styles.card}>
-        <form onSubmit={addProduct}>
+        <form onSubmit={detectForm(id,addProduct,editProduct)}>
         
         <label>Product name:</label>
         <input type="text" 
@@ -175,7 +201,7 @@ uploadTask.on('state_changed',
 
         </textarea>
         <button type="submit" className="--btn --btn-primary">
-          Save Product
+         {detectForm(id,"Save Product","Edit Product")}
         </button>
         </form>
       </Card>

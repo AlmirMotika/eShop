@@ -119,7 +119,7 @@ useEffect(()=>{
                   {`$${price}`}
                 </td>
                 <td className={styles.icons}>
-                  <Link to="/admin/add-product">
+                  <Link to={`/admin/add-product/${id}`}>
                     <FaEdit size={20} color="green"/>
                   </Link>
                   &nbsp;
