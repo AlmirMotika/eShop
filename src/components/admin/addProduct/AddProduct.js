@@ -1,5 +1,5 @@
-import { addDoc, collection, Timestamp } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { addDoc, collection, doc, setDoc, Timestamp } from 'firebase/firestore';
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate,useParams } from 'react-router-dom';
@@ -107,6 +107,30 @@ uploadTask.on('state_changed',
     e.preventDefault();
     console.log(product);
     setIsLoading(true);
+    if(product.imageURL!==productEdit.imageURL){
+      const storageRef=ref(storage,productEdit.imageURL);
+      deleteObject(storageRef);
+    }
+    try{
+      setDoc(doc(db, "products",id),{
+        name: product.name,
+      imageURL:product.imageURL,
+    price:Number(product.price),
+    category:product.category,
+    brand:product.brand,
+    desc:product.desc,
+    createdAt:productEdit.createdAt,
+    editedAt:Timestamp.now().toDate()
+      });
+      setIsLoading(false);
+      toast.success("Product edited Successfully")
+      navigate("/admin/all-products");
+
+    }
+    catch(error){
+      setIsLoading(false);
+      toast.error(error.message);
+    }
 
   }
   
