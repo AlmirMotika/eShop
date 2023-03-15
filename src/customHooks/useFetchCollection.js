@@ -1,8 +1,9 @@
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { db } from "../firebase/config";
 
-const useFetchCollection=({collectionName}) => {
+const useFetchCollection=(collectionName) => {
     const[data,setData]=useState([]);
     const[isLoading,setIsLoading]=useState(false);
     const getCollection=()=>{
@@ -17,7 +18,7 @@ const useFetchCollection=({collectionName}) => {
            id:doc.id,
            ...doc.data()
         }))
-        console.log(allData);
+        //console.log(allData);
         setData(allData);
         setIsLoading(false);
         
